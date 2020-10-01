@@ -7,7 +7,7 @@ import { buildSchema } from "type-graphql";
 import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import cors from "cors";
+import { Context } from "./types/Context";
 
 config();
 
@@ -27,13 +27,6 @@ config();
 
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
-  app.set("trust proxy", 1);
-  app.use(
-    cors({
-      origin: process.env.CORS_ORIGIN,
-      credentials: true,
-    })
-  );
   app.use(
     session({
       name: "qid",
@@ -42,11 +35,10 @@ config();
         disableTouch: true,
       }),
       cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
         httpOnly: true,
         sameSite: "lax",
-        secure: true,
-        domain: undefined
+        secure: false,
       },
       saveUninitialized: false,
       secret: process.env.SECRET ?? "",
@@ -59,7 +51,7 @@ config();
       resolvers: [`${__dirname}/resolvers/**/*${extension}`],
       validate: true,
     }),
-    context: ({ req, res }) => ({ req, res }),
+    context: ({ req, res }): Context => ({ req, res, redis }) as Context,
   });
 
   apolloServer.applyMiddleware({ app, cors: false });
