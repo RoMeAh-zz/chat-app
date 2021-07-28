@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "lib": [
-      "dom",
-      "es6",
-      "es2017",
-      "esnext.asynciterable"
-    ],
+    "target": "es2020",
+    "module": "CommonJS",
+    "lib": ["es2020"],
+    "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": false,
     "sourceMap": true,
     "outDir": "./dist",
     "moduleResolution": "node",
@@ -27,10 +25,6 @@
     "resolveJsonModule": true,
     "baseUrl": "."
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "./src/**/*.ts"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*.ts"]
 }

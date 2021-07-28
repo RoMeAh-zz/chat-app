@@ -1,4 +1,11 @@
+# Packages
 node_modules
-package-lock.json
+
+# Environment variables
 .env
-yarn.lock
+
+# Build directory
+dist
+
+# Generated Types
+server/src/types/typegraphql

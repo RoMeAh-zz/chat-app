@@ -1,0 +1,33 @@
+{
+  "name": "@blazify/server",
+  "version": "1.0.0",
+  "description": "Backend",
+  "main": "dist/index.js",
+  "author": "RoMeAh",
+  "license": "GNU",
+  "private": true,
+  "scripts": {
+    "install": "prisma generate"
+  },
+  "devDependencies": {
+    "@prisma/client": "~2.27.0",
+    "@types/graphql-fields": "^1.3.4",
+    "@types/node": "^16.4.3",
+    "graphql-fields": "^2.0.3",
+    "graphql-scalars": "^1.10.0",
+    "prisma": "~2.27.0",
+    "ts-node": "^10.1.0",
+    "typegraphql-prisma": "^0.14.7",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "apollo-server": "^3.0.2",
+    "apollo-server-express": "^3.0.2",
+    "argon2": "^0.28.2",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "graphql": "^15.5.1",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1"
+  }
+}
