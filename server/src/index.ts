@@ -23,5 +23,5 @@ import { UserResolver } from "./resolvers/User";
   await server.start();
   server.applyMiddleware({ app });
 
-  app.listen(4000, () => console.log("Server started!"));
+  app.listen(parseInt(process.env.PORT), () => console.log("Server started!"));
 })();

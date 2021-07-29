@@ -15,12 +15,14 @@ generator typegraphql {
 }
 
 model User {
-  id       String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  username String
-  email    String   @unique
+  id          String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  username    String
+  email       String   @unique
   /// @TypeGraphQL.omit(output: true)
-  password String
-  members  Member[]
+  password    String
+  members     Member[]
+  /// @TypeGraphQL.omit(output: true)
+  jwt_version Int      @default(1)
 }
 
 model Member {
