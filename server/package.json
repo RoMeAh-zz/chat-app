@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "install": "prisma generate",
-    "gen": "gen-env-types .env -o src/types/env.d.ts -e . -r .env.example"
+    "gen": "gen-env-types .env -o src/types/env.d.ts -e . -r .env.example",
+    "dev": "nodemon -e ts --exec \"yarn exec tsc && node .\""
   },
   "devDependencies": {
     "@prisma/client": "~2.27.0",

@@ -8,10 +8,12 @@ import {
   Query,
   ObjectType,
   Field,
+  UseMiddleware,
 } from "type-graphql";
 import { Context } from "../types/context";
 import { hash, verify } from "argon2";
 import { GraphQLError } from "../types/error";
+import { Auth } from "../middlewares/Auth";
 
 @ObjectType()
 class Token {
@@ -24,9 +26,26 @@ class Token {
 
 @Resolver()
 export class UserResolver {
-  @Query(() => String)
-  public async hi() {
-    return "hallo";
+  @UseMiddleware(Auth)
+  @Query(() => User)
+  public async me(@Ctx() { userId, prisma }: Context) {
+    const user = prisma.user.findUnique({ where: { id: userId! } });
+
+    if (!user) throw new GraphQLError("user", "No user found!");
+    return user;
+  }
+
+  @UseMiddleware(Auth)
+  @Query(() => Boolean)
+  public async logout(@Ctx() { userId, prisma }: Context) {
+    const user = await prisma.user.findUnique({ where: { id: userId! } });
+
+    if (!user) throw new GraphQLError("user", "No user found!");
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { jwt_version: user.jwt_version + 1 },
+    });
+    return true;
   }
 
   @Mutation(() => User)
@@ -62,15 +81,20 @@ export class UserResolver {
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) throw new GraphQLError("email", "Invalid Email");
+    if (user.bot) throw new GraphQLError("email", "Bots cannot login");
     const correct = await verify(user.password, password);
     if (!correct) throw new GraphQLError("password", "Incorrect password");
 
     return {
-      access_token: sign({ id: user.id }, process.env.JWT_ACCESS_TOKEN_SECRET, {
-        expiresIn: "15m",
-      }),
+      access_token: sign(
+        { id: user.id, bot: false, v: user.jwt_version },
+        process.env.JWT_ACCESS_TOKEN_SECRET,
+        {
+          expiresIn: "15m",
+        }
+      ),
       refresh_token: sign(
-        { id: user.id, v: user.jwt_version },
+        { id: user.id, bot: false, v: user.jwt_version },
         process.env.JWT_REFRESH_TOKEN_SECRET,
         { expiresIn: "7d" }
       ),

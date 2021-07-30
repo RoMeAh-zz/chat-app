@@ -23,6 +23,7 @@ model User {
   members     Member[]
   /// @TypeGraphQL.omit(output: true)
   jwt_version Int      @default(1)
+  bot         Boolean  @default(false)
 }
 
 model Member {
